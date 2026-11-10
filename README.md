@@ -1,2 +1,2 @@
-# rafig-games
+GAMEZY
 My first online game
