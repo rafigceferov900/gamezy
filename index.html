@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<title>Rəqəmi tap!</title>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding-top: 70px;
+        color: white;
+    }
+
+    .game {
+        background: white;
+        color: #333;
+        width: 320px;
+        margin: auto;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px #3335;
+    }
+
+    h1 {
+        color: #764ba2;
+    }
+
+    input {
+        padding: 12px;
+        width: 150px;
+        border: 2px solid #764ba2;
+        border-radius: 10px;
+        font-size: 18px;
+        text-align: center;
+    }
+
+    button {
+        padding: 12px 20px;
+        margin: 10px;
+        border: none;
+        border-radius: 10px;
+        background: #764ba2;
+        color: white;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    button:hover {
+        background: #563580;
+    }
+
+    #result {
+        font-weight: bold;
+        min-height: 25px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+    <h1>🎮 Rəqəmi tap!</h1>
+
+    <p>1-dən 10-a qədər rəqəm seç!</p>
+
+    <h3>🏆 Xal: <span id="score">0</span></h3>
+
+    <input type="number" id="guess"
+    placeholder="Rəqəm yaz" min="1" max="10">
+
+    <br>
+
+    <button onclick="checkGuess()">YOXLA</button>
+
+    <p id="result"></p>
+
+    <button onclick="restartGame()">🔄 YENİDƏN BAŞLA</button>
+
+</div>
+
+<script>
+    let secret = Math.floor(Math.random() * 10) + 1;
+    let score = 0;
+    let gameOver = false;
+
+    function checkGuess() {
+        let input = document.getElementById("guess");
+        let guess = Number(input.value);
+        let result = document.getElementById("result");
+
+        if (gameOver) {
+            result.innerText = "Yeni oyun başlat!";
+            return;
+        }
+
+        if (input.value === "" || !Number.isInteger(guess)
+            || guess < 1 || guess > 10) {
+            result.innerText = "1-dən 10-a qədər rəqəm yaz!";
+        }
+        else if (guess === secret) {
+            score++;
+            document.getElementById("score").innerText = score;
+            result.innerText = "🎉 ƏLA! Düz tapdın!";
+            gameOver = true;
+        }
+        else if (guess < secret) {
+            result.innerText = "⬆️ Daha böyük rəqəm yoxla!";
+        }
+        else {
+            result.innerText = "⬇️ Daha kiçik rəqəm yoxla!";
+        }
+    }
+
+    function restartGame() {
+        secret = Math.floor(Math.random() * 10) + 1;
+        gameOver = false;
+        document.getElementById("guess").value = "";
+        document.getElementById("result").innerText = "";
+    }
+</script>
+
+</body>
+</html>
+
