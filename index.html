@@ -3,126 +3,204 @@
 <html lang="az">
 <head>
 <meta charset="UTF-8">
-<title>Rəqəmi tap!</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAMEZY - Play & Win</title>
 <style>
-    body {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        font-family: Arial, sans-serif;
-        text-align: center;
-        padding-top: 70px;
-        color: white;
-    }
-
-    .game {
-        background: white;
-        color: #333;
-        width: 320px;
-        margin: auto;
-        padding: 30px;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px #3335;
-    }
-
-    h1 {
-        color: #764ba2;
-    }
-
-    input {
-        padding: 12px;
-        width: 150px;
-        border: 2px solid #764ba2;
-        border-radius: 10px;
-        font-size: 18px;
-        text-align: center;
-    }
-
-    button {
-        padding: 12px 20px;
-        margin: 10px;
-        border: none;
-        border-radius: 10px;
-        background: #764ba2;
-        color: white;
-        cursor: pointer;
-        font-size: 15px;
-    }
-
-    button:hover {
-        background: #563580;
-    }
-
-    #result {
-        font-weight: bold;
-        min-height: 25px;
-    }
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#101326;color:white}
+header{text-align:center;padding:25px;background:#191d38;border-bottom:2px solid #7955e8}
+header h1{font-size:40px;color:#a78bfa;margin:0}
+header p{color:#aaa;letter-spacing:3px}
+.container{max-width:1000px;margin:auto;padding:25px}
+h2{text-align:center;color:#c4b5fd}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px}
+.card{background:#202544;border:1px solid #343b64;border-radius:18px;padding:25px;text-align:center;cursor:pointer;transition:.2s}
+.card:hover{transform:translateY(-5px);border-color:#a78bfa}
+.emoji{font-size:55px}
+.card p{color:#aaa}
+button{background:#8056e9;color:white;border:0;border-radius:10px;padding:13px 20px;font-size:16px;font-weight:bold;cursor:pointer;margin:5px}
+button:hover{background:#6338c9}
+.play{display:none;background:#202544;padding:25px;border-radius:18px;text-align:center;margin-top:25px}
+input{padding:12px;border-radius:8px;border:0;font-size:18px;width:130px;text-align:center}
+.result{font-size:19px;min-height:30px;color:#c4b5fd}
+.back{background:#555}
+.cells{display:grid;grid-template-columns:repeat(3,85px);justify-content:center;gap:7px;margin:20px}
+.cell{height:85px;background:#343b64;border-radius:10px;font-size:35px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+footer{text-align:center;color:#888;padding:30px}
 </style>
 </head>
-
 <body>
 
-<div class="game">
+<header>
+<h1>🎮 GAMEZY</h1>
+<p>PLAY • ENJOY • WIN</p>
+</header>
 
-    <h1>🎮 Rəqəmi tap!</h1>
+<div class="container">
+<h2>🔥 Oyun seç və başla!</h2>
 
-    <p>1-dən 10-a qədər rəqəm seç!</p>
-
-    <h3>🏆 Xal: <span id="score">0</span></h3>
-
-    <input type="number" id="guess"
-    placeholder="Rəqəm yaz" min="1" max="10">
-
-    <br>
-
-    <button onclick="checkGuess()">YOXLA</button>
-
-    <p id="result"></p>
-
-    <button onclick="restartGame()">🔄 YENİDƏN BAŞLA</button>
-
+<div class="games" id="games">
+<div class="card" onclick="openGame('guess')">
+<div class="emoji">🔢</div><h3>Rəqəm tap</h3>
+<p>Gizli rəqəmi tap!</p><button>Oyna</button>
 </div>
 
+<div class="card" onclick="openGame('rps')">
+<div class="emoji">✂️</div><h3>Daş, Kağız, Qayçı</h3>
+<p>Kompüterə qalib gəl!</p><button>Oyna</button>
+</div>
+
+<div class="card" onclick="openGame('xo')">
+<div class="emoji">❌</div><h3>X-O Oyunu</h3>
+<p>3 işarəni sırala!</p><button>Oyna</button>
+</div>
+
+<div class="card" onclick="openGame('click')">
+<div class="emoji">⚡</div><h3>Sürət testi</h3>
+<p>10 saniyədə bacardığın qədər bas!</p><button>Oyna</button>
+</div>
+</div>
+
+<div class="play" id="play">
+<button class="back" onclick="home()">← Geri</button>
+<h2 id="gameTitle"></h2>
+
+<div id="guessGame" style="display:none">
+<p>1-dən 10-a qədər rəqəm tap!</p>
+<input type="number" id="guess" min="1" max="10" placeholder="Rəqəm">
+<br><button onclick="checkGuess()">Yoxla</button>
+<p class="result" id="guessResult"></p>
+<button onclick="newGuess()">Yenidən başla</button>
+</div>
+
+<div id="rpsGame" style="display:none">
+<p>Birini seç!</p>
+<button onclick="rps('Daş')">🪨 Daş</button>
+<button onclick="rps('Kağız')">📄 Kağız</button>
+<button onclick="rps('Qayçı')">✂️ Qayçı</button>
+<p class="result" id="rpsResult"></p>
+</div>
+
+<div id="xoGame" style="display:none">
+<p>Sən X, kompüter O oynayır.</p>
+<div class="cells" id="board"></div>
+<p class="result" id="xoResult"></p>
+<button onclick="newXO()">Yenidən başla</button>
+</div>
+
+<div id="clickGame" style="display:none">
+<p>10 saniyədə neçə dəfə basa bilərsən?</p>
+<h2 id="clickScore">0</h2>
+<p id="timer">10 saniyə</p>
+<button id="clickBtn" onclick="clickPoint">BAŞLA!</button>
+<p class="result" id="clickResult"></p>
+</div>
+</div>
+</div>
+
+<footer>© 2026 GAMEZY | Play & Enjoy 🎮</footer>
+
 <script>
-    let secret = Math.floor(Math.random() * 10) + 1;
-    let score = 0;
-    let gameOver = false;
+let secret=1,xo=Array(9).fill(''),xoOver=false;
+let clicks=0,seconds=10,interval=null,started=false;
 
-    function checkGuess() {
-        let input = document.getElementById("guess");
-        let guess = Number(input.value);
-        let result = document.getElementById("result");
-
-        if (gameOver) {
-            result.innerText = "Yeni oyun başlat!";
-            return;
-        }
-
-        if (input.value === "" || !Number.isInteger(guess)
-            || guess < 1 || guess > 10) {
-            result.innerText = "1-dən 10-a qədər rəqəm yaz!";
-        }
-        else if (guess === secret) {
-            score++;
-            document.getElementById("score").innerText = score;
-            result.innerText = "🎉 ƏLA! Düz tapdın!";
-            gameOver = true;
-        }
-        else if (guess < secret) {
-            result.innerText = "⬆️ Daha böyük rəqəm yoxla!";
-        }
-        else {
-            result.innerText = "⬇️ Daha kiçik rəqəm yoxla!";
-        }
-    }
-
-    function restartGame() {
-        secret = Math.floor(Math.random() * 10) + 1;
-        gameOver = false;
-        document.getElementById("guess").value = "";
-        document.getElementById("result").innerText = "";
-    }
+function openGame(name){
+ document.getElementById('games').style.display='none';
+ document.getElementById('play').style.display='block';
+ ['guessGame','rpsGame','xoGame','clickGame'].forEach(id=>{
+  document.getElementById(id).style.display='none';
+ });
+ let titles={guess:'🔢 Rəqəm tap',rps:'✂️ Daş, Kağız, Qayçı',xo:'❌⭕ X-O Oyunu',click:'⚡ Sürət testi'};
+ document.getElementById('gameTitle').textContent=titles[name];
+ document.getElementById(name+'Game').style.display='block';
+ if(name==='guess')newGuess();
+ if(name==='xo')newXO();
+ if(name==='click')resetClick();
+}
+function home(){
+ clearInterval(interval);
+ document.getElementById('play').style.display='none';
+ document.getElementById('games').style.display='grid';
+}
+function newGuess(){
+ secret=Math.floor(Math.random()*10)+1;
+ document.getElementById('guess').value='';
+ document.getElementById('guessResult').textContent='';
+}
+function checkGuess(){
+ let n=Number(document.getElementById('guess').value);
+ let r=document.getElementById('guessResult');
+ if(!Number.isInteger(n)||n<1||n>10)r.textContent='1-dən 10-a qədər rəqəm yaz!';
+ else if(n===secret)r.textContent='🎉 ƏLA! Düz tapdın!';
+ else if(n<secret)r.textContent='⬆️ Daha böyük rəqəm yoxla!';
+ else r.textContent='⬇️ Daha kiçik rəqəm yoxla!';
+}
+function rps(user){
+ let choices=['Daş','Kağız','Qayçı'];
+ let cpu=choices[Math.floor(Math.random()*3)];
+ let result=user===cpu?'🤝 Heç-heçə!':
+ (user==='Daş'&&cpu==='Qayçı')||(user==='Kağız'&&cpu==='Daş')||(user==='Qayçı'&&cpu==='Kağız')?'🎉 Sən qalib gəldin!':'😅 Kompüter qalib gəldi!';
+ document.getElementById('rpsResult').textContent=user+' VS '+cpu+' — '+result;
+}
+function newXO(){
+ xo=Array(9).fill('');xoOver=false;
+ document.getElementById('xoResult').textContent='';
+ drawXO();
+}
+function checkWin(a,p){
+ return [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]].some(line=>line.every(i=>a[i]===p));
+}
+function drawXO(){
+ let b=document.getElementById('board');b.innerHTML='';
+ xo.forEach((v,i)=>{
+  let c=document.createElement('div');c.className='cell';c.textContent=v;
+  c.onclick=()=>moveXO(i);b.appendChild(c);
+ });
+}
+function moveXO(i){
+ if(xo[i]||xoOver)return;
+ xo[i]='X';
+ if(checkWin(xo,'X'))finishXO('🎉 Sən qalib gəldin!');
+ else if(xo.every(Boolean))finishXO('🤝 Heç-heçə!');
+ else{
+  let empty=xo.map((v,i)=>v===''?i:-1).filter(i=>i>=0);
+  xo[empty[Math.floor(Math.random()*empty.length)]]='O';
+  if(checkWin(xo,'O'))finishXO('😅 Kompüter qalib gəldi!');
+  else if(xo.every(Boolean))finishXO('🤝 Heç-heçə!');
+ }
+ drawXO();
+}
+function finishXO(msg){
+ xoOver=true;document.getElementById('xoResult').textContent=msg;
+}
+function resetClick(){
+ clearInterval(interval);clicks=0;seconds=10;started=false;
+ document.getElementById('clickScore').textContent='0';
+ document.getElementById('timer').textContent='10 saniyə';
+ document.getElementById('clickResult').textContent='';
+ document.getElementById('clickBtn').textContent='BAŞLA!';
+ document.getElementById('clickBtn').disabled=false;
+}
+function clickPoint(){
+ if(!started){
+  started=true;clicks=0;seconds=10;
+  document.getElementById('clickBtn').textContent='BAS!';
+  interval=setInterval(()=>{
+   seconds--;
+   document.getElementById('timer').textContent=seconds+' saniyə';
+   if(seconds<=0){
+    clearInterval(interval);started=false;
+    document.getElementById('clickBtn').disabled=true;
+    document.getElementById('clickResult').textContent='🏆 Nəticən: '+clicks+' klik!';
+    document.getElementById('clickBtn').textContent='Bitdi!';
+   }
+  },1000);
+ }else{
+  clicks++;
+  document.getElementById('clickScore').textContent=clicks;
+ }
+}
+document.getElementById('clickBtn').onclick=clickPoint;
 </script>
-
 </body>
 </html>
-
